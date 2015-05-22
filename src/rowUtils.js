@@ -91,3 +91,35 @@ exports.parseIntegers = function(integerFields){
 		return row;
 	}
 }
+
+
+exports.parseGeoLocation = function(geoFields) {
+	return function(row)
+	{
+		// both latitude and longitude fields must be specified
+		if((!geoFields.lat) || (!geoFields.lon))
+			return row;
+		
+		// check if we have both latitude & longitude fields
+		if((!row[geoFields.lat]) || (!row[geoFields.lon]))
+			return row;
+
+		var latitude = parseFloat(row[geoFields.lat]);
+		var longitude = parseFloat(row[geoFields.lon]);
+		
+		// sometimes the locations needs to be scaled by 10, this is an error in the dataset
+		// TODO fix dataset
+		if((row.country == 'nl') && (latitude < 6))
+		{
+			latitude *= 10;
+			longitude *= 10;
+		}
+		
+		// add parsed geolocation, remove unparsed
+		row.geoLocation = [latitude, longitude];
+		delete row[geoFields.lat];
+		delete row[geoFields.lon];
+		
+		return row;
+	}
+}

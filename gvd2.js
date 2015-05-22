@@ -20,31 +20,47 @@ var client = new elasticsearch.Client({
   log: logLevel
 });
 
+var datasources= require('./datasources.js');
+var datasource = datasources['schools'];
+
+var mappings = {
+	school: {
+		properties: {
+			geoLocation: {
+				type: 'geo_point',
+				fielddata: {
+					format: 'compressed',
+					precision: '3m'
+				}
+			}
+		}
+	}
+}
+			
+// add keyword (not analyzed fields)
+datasource.keywordFields.forEach(function(fieldName){
+	mappings.school.properties[fieldName] = {
+		type: 'string',
+		index: 'not_analyzed'
+	};
+});
+
+// create the index
 client.indices
 	.create({
 		index: argv.index,
 		body: {
-			mappings: {
-				school: {
-					properties: {
-						geoLocation: {
-							type: 'geo_point',
-							fielddata: {
-								format: 'compressed',
-								precision: '3m'
-							}
-						}
-					}
-				}					
-			}
+			settings: {
+				number_of_replicas: 0,
+				number_of_shards: 5
+			},
+			mappings: mappings
 		}				
 	})
 	.then(function(result){
 		var sculpt = require('sculpt');
 		var csvParser = require("fast-csv");
 		var util = require('./src/rowUtils.js');
-		var datasources= require('./datasources.js');
-		var datasource = datasources['schools'];
 
 		var through = require('through');
 
@@ -53,16 +69,12 @@ client.indices
 			.map(util.compose([
 				util.mapColumns(datasource.mapping, datasource.initial),
 				util.computeIdHash(datasource.idFields),
-				util.parseIntegers(datasource.integerFields || [])
+				util.parseIntegers(datasource.integerFields || []),
+				util.parseGeoLocation(datasource.geoLocation || [])
 			]));
 
 		var t = through(function(data){
 			this.pause();
-			if(data.geo_latitude) {
-				data.geoLocation = [parseFloat(data.geo_latitude), parseFloat(data.geo_longitude)];
-				delete data.geo_latitude;
-				delete data.geo_longitude;
-			}
 			client
 				.index({
 					index: argv.index,

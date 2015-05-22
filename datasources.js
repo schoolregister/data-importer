@@ -151,5 +151,11 @@ exports.schools = {
 	initial: { country: 'nl' },
 	
 	idFields: ['building_number'],
-	integerFields: ['latitude', 'longitude']
+	integerFields: ['cluster', /_number$/],
+	geoLocation: {
+		lat: 'geo_latitude',
+		lon: 'geo_longitude'
+	},
+	keywordFields: ['denomination', 'category', 'phase', 'population',
+		'strict_or_free', 'language', 'municipality', 'method', 'kind_of_education']
 }
