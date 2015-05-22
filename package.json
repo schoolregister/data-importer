@@ -6,6 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Jelle Herold <jelle@defekt.nl>",
+  "license": "AGPL",
+  "dependencies": {
+    "fast-csv": "^0.6.0",
+    "lodash": "^3.9.1",
+    "minimist": "^1.1.1",
+    "prettyjson": "^1.1.1",
+    "sculpt": "^0.1.7",
+    "through": "^2.3.7"
+  }
 }
