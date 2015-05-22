@@ -9,6 +9,7 @@
   "author": "Jelle Herold <jelle@defekt.nl>",
   "license": "AGPL",
   "dependencies": {
+    "elasticsearch": "^4.1.0",
     "fast-csv": "^0.6.0",
     "lodash": "^3.9.1",
     "minimist": "^1.1.1",
