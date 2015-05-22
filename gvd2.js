@@ -51,6 +51,14 @@ client.indices
 		index: argv.index,
 		body: {
 			settings: {
+				analysis: {
+					analyzer: {
+						default: {
+							type: 'dutch',
+
+						}
+					}
+				},
 				number_of_replicas: 0,
 				number_of_shards: 5
 			},

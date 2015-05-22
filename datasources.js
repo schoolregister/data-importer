@@ -156,6 +156,6 @@ exports.schools = {
 		lat: 'geo_latitude',
 		lon: 'geo_longitude'
 	},
-	keywordFields: ['denomination', 'category', 'phase', 'population',
+	keywordFields: ['denomination', 'category', 'phase', 'population', 'building_type',
 		'strict_or_free', 'language', 'municipality', 'method', 'kind_of_education']
 }
